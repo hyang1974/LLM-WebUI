@@ -331,10 +331,13 @@ def install_extensions_requirements():
         run_cmd(f"python -m pip install -r {extension_req_path} --upgrade", assert_success=False, environment=True)
 
 
-def update_requirements(initial_installation=False, pull=True):
+# HY_Revision #2: update pull=False
+# def update_requirements(initial_installation=False, pull=True):
+def update_requirements(initial_installation=False, pull=False):
     # Create .git directory if missing
     if not os.path.exists(os.path.join(script_dir, ".git")):
-        git_creation_cmd = 'git init -b main && git remote add origin https://github.com/oobabooga/text-generation-webui && git fetch && git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main && git reset --hard origin/main && git branch --set-upstream-to=origin/main'
+        # HY_Revision #3: change default repo to: https://github.com/hyang1974/LLM-WebUI
+        git_creation_cmd = 'git init -b main && git remote add origin https://github.com/hyang1974/LLM-WebUI && git fetch && git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main && git reset --hard origin/main && git branch --set-upstream-to=origin/main'
         run_cmd(git_creation_cmd, environment=True, assert_success=True)
 
     if pull:
@@ -406,6 +409,10 @@ def update_requirements(initial_installation=False, pull=True):
     # Install/update the project requirements
     run_cmd("python -m pip install -r temp_requirements.txt --upgrade", assert_success=True, environment=True)
     os.remove('temp_requirements.txt')
+
+    # HY_Revision #1: update transformer to latest dev version to support starcoder2
+    print("HY_Revision: update tansformers to the latest version @ https://github.com/huggingface/transformers.git")
+    run_cmd("python -m pip install git+https://github.com/huggingface/transformers.git", assert_success=True, environment=True)
 
     # Check for '+cu' or '+rocm' in version string to determine if torch uses CUDA or ROCm. Check for pytorch-cuda as well for backwards compatibility
     if not any((is_cuda, is_rocm)) and run_cmd("conda list -f pytorch-cuda | grep pytorch-cuda", environment=True, capture_output=True).returncode == 1:
