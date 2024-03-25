@@ -62,7 +62,7 @@ from modules.utils import gradio
 
 
 def signal_handler(sig, frame):
-    logger.info("Received Ctrl+C. Shutting down Text generation web UI gracefully.")
+    logger.info("Received Ctrl+C. Shutting down Large Language Model Web UI gracefully.")
     sys.exit(0)
 
 
@@ -71,7 +71,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 def create_interface():
 
-    title = 'Text generation web UI'
+    title = 'Large Language Model Web UI'
 
     # Password authentication
     auth = []
@@ -174,7 +174,7 @@ def create_interface():
 
 if __name__ == "__main__":
 
-    logger.info("Starting Text generation web UI")
+    logger.info("Starting Large Language Model Web UI")
     do_cmd_flags_warnings()
 
     # Load custom settings
